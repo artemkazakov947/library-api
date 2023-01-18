@@ -3,11 +3,16 @@ from djmoney.models.fields import MoneyField
 
 
 class Book(models.Model):
+
+    class CoverChoices(models.TextChoices):
+        HARD = "Hard"
+        SOFT = "Soft"
+
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
-    cover = models.TextChoices("cover", "HARD SOFT")
+    cover = models.CharField(max_length=4, choices=CoverChoices.choices)
     inventory = models.IntegerField()
     daily_fee = MoneyField(max_digits=4, decimal_places=2, default_currency="USD")
 
     def __str__(self) -> str:
-        return f"Book {Book.title} by {Book.author}"
+        return f"'{self.title}' by {self.author}"
