@@ -3,7 +3,6 @@ from djmoney.models.fields import MoneyField
 
 
 class Book(models.Model):
-
     class CoverChoices(models.TextChoices):
         HARD = "Hard"
         SOFT = "Soft"
