@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "djmoney",
     "book_service",
     "user",
+    "borrowing",
 ]
 
 MIDDLEWARE = [
@@ -136,6 +137,5 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZE",
 }
