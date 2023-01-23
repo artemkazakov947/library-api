@@ -10,7 +10,15 @@ class BorrowingListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Borrowing
-        fields = ("id", "borrow_date", "expected_return_date", "actual_return_date", "book_title", "book_author", "user_id")
+        fields = (
+            "id",
+            "borrow_date",
+            "expected_return_date",
+            "actual_return_date",
+            "book_title",
+            "book_author",
+            "user_id",
+        )
 
 
 class BorrowingDetailSerializer(serializers.ModelSerializer):
@@ -18,4 +26,11 @@ class BorrowingDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Borrowing
-        fields = ("id", "borrow_date", "expected_return_date", "actual_return_date", "book", "user_id")
+        fields = (
+            "id",
+            "borrow_date",
+            "expected_return_date",
+            "actual_return_date",
+            "book",
+            "user_id",
+        )
