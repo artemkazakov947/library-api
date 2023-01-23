@@ -12,7 +12,7 @@ def get_return_date():
 
 
 class Borrowing(models.Model):
-    borrow_date = models.DateField()
+    borrow_date = models.DateField(default=date.today)
     expected_return_date = models.DateField(default=get_return_date)
     actual_return_date = models.DateField(blank=True, null=True)
     book_id = models.ForeignKey(
