@@ -22,6 +22,9 @@ class BorrowingListView(generics.ListCreateAPIView):
             return queryset
         return queryset.filter(user_id=self.request.user)
 
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user)
+
 
 class BorrowingDetailView(generics.RetrieveAPIView):
     queryset = Borrowing.objects.all()
