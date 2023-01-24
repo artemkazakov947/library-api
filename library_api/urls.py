@@ -20,5 +20,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("book_service.urls", namespace="book_service")),
     path("api/users/", include("user.urls", namespace="user")),
-    path("api/", include("borrowing.urls", namespace="borrowing"))
+    path("api/", include("borrowing.urls", namespace="borrowing")),
+
+    path("__debug__/", include("debug_toolbar.urls")),
 ]
