@@ -37,7 +37,9 @@ class Borrowing(models.Model):
             )
 
     def clean(self) -> None:
-        Borrowing.validate_dates(self.expected_return_date, self.actual_return_date, ValidationError)
+        Borrowing.validate_dates(
+            self.expected_return_date, self.actual_return_date, ValidationError
+        )
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
