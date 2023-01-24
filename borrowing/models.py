@@ -23,27 +23,21 @@ class Borrowing(models.Model):
     )
 
     @staticmethod
-    def validate_dates(borrow_date: date, expected_return: date, actual_return: date, error) -> None:
-        if borrow_date != date.today():
-            raise error(
-                {"borrow_date": f"Borrow date must be today({date.today()})!"}
-            )
-        if expected_return < borrow_date:
-            raise error(
-                {"expected_return_date": "Invalid date - renewal in past!"}
-            )
+    def validate_dates(expected_return: date, actual_return: date, error) -> None:
+        if expected_return < date.today():
+            raise error({"expected_return_date": "Invalid date - renewal in past!"})
         if actual_return:
-            if actual_return < borrow_date:
-                raise error(
-                    {"actual_return_date": "Invalid date - renewal in past!"}
-                )
-        if borrow_date + timedelta(days=14) < expected_return:
+            if actual_return < date.today():
+                raise error({"actual_return_date": "Invalid date - renewal in past!"})
+        if date.today() + timedelta(days=14) < expected_return:
             raise error(
-                {"expected_return_date": "Enter a date between now and 2 weeks (default 2)."}
+                {
+                    "expected_return_date": "Enter a date between now and 2 weeks (default 2)."
+                }
             )
 
     def clean(self) -> None:
-        Borrowing.validate_dates(self.borrow_date, self.expected_return_date, self.actual_return_date, ValidationError)
+        Borrowing.validate_dates(self.expected_return_date, self.actual_return_date, ValidationError)
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
