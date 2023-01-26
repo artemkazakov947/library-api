@@ -7,6 +7,10 @@ from borrowing.models import Borrowing
 
 
 class BorrowingListSerializer(serializers.ModelSerializer):
+    book_title = serializers.SlugRelatedField(
+        source="book_id", slug_field="title", many=False, read_only=True
+    )
+
     class Meta:
         model = Borrowing
         fields = (
@@ -15,6 +19,7 @@ class BorrowingListSerializer(serializers.ModelSerializer):
             "expected_return_date",
             "actual_return_date",
             "book_id",
+            "book_title",
             "user_id",
         )
 
@@ -67,5 +72,4 @@ class BorrowingDetailSerializer(serializers.ModelSerializer):
             "expected_return_date",
             "actual_return_date",
             "book",
-            "user_id",
         )
