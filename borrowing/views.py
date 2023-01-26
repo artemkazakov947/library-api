@@ -1,5 +1,11 @@
-from rest_framework import generics
+from datetime import date
+
+from rest_framework import status, mixins, viewsets
+from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 
 from borrowing.models import Borrowing
 from borrowing.serializers import (
@@ -9,14 +15,23 @@ from borrowing.serializers import (
 )
 
 
-class BorrowingListView(generics.ListCreateAPIView):
+class BorrowingViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
     serializer_class = BorrowingListSerializer
+    queryset = Borrowing.objects.all()
     permission_classes = (IsAuthenticated,)
 
     def get_serializer_class(self):
-        if self.request.method == "GET":
+        if self.action == "list":
             return BorrowingListSerializer
-        return BorrowingCreateSerializer
+        if self.action == "create":
+            return BorrowingCreateSerializer
+        if self.action in ["retrieve", "return"]:
+            return BorrowingDetailSerializer
 
     def get_queryset(self):
         queryset = Borrowing.objects.all()
@@ -27,16 +42,15 @@ class BorrowingListView(generics.ListCreateAPIView):
                 if user == "":
                     return queryset.exclude(actual_return_date__isnull=False)
                 elif user != "":
-                    return queryset.filter(user_id_id=user).exclude(actual_return_date__isnull=False)
+                    return queryset.filter(user_id_id=user).exclude(
+                        actual_return_date__isnull=False
+                    )
             return queryset
         if is_active == "":
-            return queryset.filter(user_id=self.request.user).exclude(actual_return_date__isnull=False)
+            return queryset.filter(user_id=self.request.user).exclude(
+                actual_return_date__isnull=False
+            )
         return queryset.filter(user_id=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
-
-
-class BorrowingDetailView(generics.RetrieveAPIView):
-    queryset = Borrowing.objects.all()
-    serializer_class = BorrowingDetailSerializer
