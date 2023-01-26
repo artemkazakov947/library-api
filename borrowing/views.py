@@ -25,6 +25,27 @@ class BorrowingViewSet(
     queryset = Borrowing.objects.all()
     permission_classes = (IsAuthenticated,)
 
+    @action(
+        methods=["GET"],
+        detail=True,
+        url_path="return",
+        permission_classes=[IsAuthenticated],
+    )
+    def borrowing_return_view(self, request, pk=None):
+        borrowing = Borrowing.objects.get(id=self.kwargs["pk"])
+        if borrowing.actual_return_date is not None:
+            raise ValidationError("This borrowing has been already returned!")
+        borrowing.actual_return_date = date.today()
+        book = borrowing.book_id
+        book.inventory += 1
+        book.save()
+        borrowing.save()
+        serializer = BorrowingDetailSerializer(borrowing, request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def get_serializer_class(self):
         if self.action == "list":
             return BorrowingListSerializer
