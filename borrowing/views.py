@@ -22,7 +22,7 @@ class BorrowingViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = BorrowingListSerializer
-    queryset = Borrowing.objects.all()
+    queryset = Borrowing.objects.all().select_related("book_id")
     permission_classes = (IsAuthenticated,)
 
     @action(
@@ -55,7 +55,7 @@ class BorrowingViewSet(
             return BorrowingDetailSerializer
 
     def get_queryset(self):
-        queryset = Borrowing.objects.all()
+        queryset = self.queryset
         is_active = self.request.GET.get("is_active")
         user = self.request.GET.get("user_id")
         if self.request.user.is_staff is True:
