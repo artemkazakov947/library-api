@@ -1,9 +1,15 @@
+import os
+
 from django.db import transaction
 from rest_framework import serializers
 
 from book_service.models import Book
 from book_service.serializers import BookSerializer
 from borrowing.models import Borrowing
+from borrowing.telegram_notification import borrowing_telegram_notification
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class BorrowingListSerializer(serializers.ModelSerializer):
@@ -58,6 +64,10 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             book.inventory -= 1
             book.save()
             borrowing = Borrowing.objects.create(**validated_data)
+            message = f"New borrowing. {validated_data}"
+            borrowing_telegram_notification(
+                message, os.getenv("CHAT_ID"), os.getenv("BOT_TOKEN")
+            )
         return borrowing
 
 
