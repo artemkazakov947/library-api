@@ -64,7 +64,13 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             book.inventory -= 1
             book.save()
             borrowing = Borrowing.objects.create(**validated_data)
-            message = f"New borrowing. {validated_data}"
+            message = (
+                f"New borrowing! "
+                f" Book: id {book.id}. Title:'{book.title}' by {book.author}."
+                f" Borrowing date: {borrowing.borrow_date.strftime('%d/%m/%Y')}."
+                f" Expecting return: {borrowing.expected_return_date.strftime('%d/%m/%Y')}."
+                f" Borrower_id: {borrowing.user_id.id}."
+            )
             borrowing_telegram_notification(
                 message, os.getenv("CHAT_ID"), os.getenv("BOT_TOKEN")
             )
