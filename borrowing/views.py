@@ -1,5 +1,6 @@
 from datetime import date
 
+from django.db.models import QuerySet
 from rest_framework import status, mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -54,7 +55,7 @@ class BorrowingViewSet(
         if self.action in ["retrieve", "return"]:
             return BorrowingDetailSerializer
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         queryset = self.queryset
         is_active = self.request.GET.get("is_active")
         user = self.request.GET.get("user_id")
@@ -73,5 +74,5 @@ class BorrowingViewSet(
             )
         return queryset.filter(user_id=self.request.user)
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer) -> None:
         serializer.save(user_id=self.request.user)
