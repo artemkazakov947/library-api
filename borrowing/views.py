@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.db.models import QuerySet
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status, mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -26,6 +27,9 @@ class BorrowingViewSet(
     queryset = Borrowing.objects.all().select_related("book_id")
     permission_classes = (IsAuthenticated,)
 
+    @extend_schema(
+        responses={status.HTTP_200_OK: BorrowingDetailSerializer},
+    )
     @action(
         methods=["GET"],
         detail=True,
@@ -33,6 +37,7 @@ class BorrowingViewSet(
         permission_classes=[IsAuthenticated],
     )
     def borrowing_return_view(self, request, pk=None):
+        """By this action user makes return of book with certain id along with it this book inventory increases by 1"""
         borrowing = Borrowing.objects.get(id=self.kwargs["pk"])
         if borrowing.actual_return_date is not None:
             raise ValidationError("This borrowing has been already returned!")
@@ -60,7 +65,7 @@ class BorrowingViewSet(
         is_active = self.request.GET.get("is_active")
         user = self.request.GET.get("user_id")
         if self.request.user.is_staff is True:
-            if is_active == "":
+            if is_active:
                 if user == "":
                     return queryset.exclude(actual_return_date__isnull=False)
                 elif user != "":
@@ -68,7 +73,7 @@ class BorrowingViewSet(
                         actual_return_date__isnull=False
                     )
             return queryset
-        if is_active == "":
+        if is_active:
             return queryset.filter(user_id=self.request.user).exclude(
                 actual_return_date__isnull=False
             )
@@ -76,3 +81,25 @@ class BorrowingViewSet(
 
     def perform_create(self, serializer) -> None:
         serializer.save(user_id=self.request.user)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="user_id",
+                type={"type": "int"},
+                description="Filter for admins. "
+                            "Use along with parameter is_active "
+                            "(ex ?user_id&is_active will return borrowings of all userrs. "
+                            "?user_id=1&is_active will return borrowing of user with id 1)",
+                required=False
+            ),
+            OpenApiParameter(
+                name="is_active",
+                description="Filter by actual_return_date (ex ?is_active) only for authenticated non admin users",
+                required=False,
+                allow_blank=True,
+            ),
+        ],
+    )
+    def list(self, request, *args, **kwargs):
+        return super(BorrowingViewSet, self).list(request, *args, **kwargs)
