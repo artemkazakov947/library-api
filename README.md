@@ -13,7 +13,7 @@
 
 ## Installing / Getting started
 
-You have to install Python 3 and create your own Telegram bot!
+You have to install Python 3 and create your own Telegram-bot!
 
 
 ```shell
