@@ -2,7 +2,7 @@
 
 ### Project Description:
     In this project was implemented an online management system for book borrowings. The system optimizes the work 
-    of library administrators and  makes the service much more user-friendly.
+    of library`s administrators and  makes the service much more user-friendly.
     
 ### Functional (what the system do):
     Web-based
@@ -29,9 +29,9 @@ python manage.py runserver
 ```
 
 ### Features
-    - Permissions implemented
+    - Permissions were implemented
     - CRUD for books
-    - Borrowing and return mechanism with books amount accounting
+    - Borrowing and return mechanism with accounting of books amount
     - Notification for admin about new borrowing via Telegram bot
 
     
