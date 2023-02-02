@@ -1,3 +1,4 @@
+
  # library-api
 
 ### Project Description:
@@ -34,5 +35,3 @@ python manage.py runserver
     - Borrowing and return mechanism with accounting of books amount
     - Notification for admin about new borrowing via Telegram bot
 
-    
-    
