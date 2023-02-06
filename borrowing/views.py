@@ -68,10 +68,9 @@ class BorrowingViewSet(
             if is_active:
                 if user == "":
                     return queryset.exclude(actual_return_date__isnull=False)
-                elif user != "":
-                    return queryset.filter(user_id_id=user).exclude(
-                        actual_return_date__isnull=False
-                    )
+                return queryset.filter(user_id_id=user).exclude(
+                    actual_return_date__isnull=False
+                )
             return queryset
         if is_active:
             return queryset.filter(user_id=self.request.user).exclude(
@@ -88,10 +87,10 @@ class BorrowingViewSet(
                 name="user_id",
                 type={"type": "int"},
                 description="Filter for admins. "
-                            "Use along with parameter is_active "
-                            "(ex ?user_id&is_active will return borrowings of all userrs. "
-                            "?user_id=1&is_active will return borrowing of user with id 1)",
-                required=False
+                "Use along with parameter is_active "
+                "(ex ?user_id&is_active will return borrowings of all userrs. "
+                "?user_id=1&is_active will return borrowing of user with id 1)",
+                required=False,
             ),
             OpenApiParameter(
                 name="is_active",
