@@ -7,9 +7,6 @@ from book_service.models import Book
 from book_service.serializers import BookSerializer
 from borrowing.models import Borrowing
 from borrowing.telegram_notification import borrowing_telegram_notification
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 class BorrowingListSerializer(serializers.ModelSerializer):
