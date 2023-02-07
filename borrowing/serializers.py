@@ -11,7 +11,7 @@ from borrowing.telegram_notification import borrowing_telegram_notification
 
 class BorrowingListSerializer(serializers.ModelSerializer):
     book_title = serializers.SlugRelatedField(
-        source="book_id", slug_field="title", many=False, read_only=True
+        source="book", slug_field="title", many=False, read_only=True
     )
 
     class Meta:
@@ -21,9 +21,9 @@ class BorrowingListSerializer(serializers.ModelSerializer):
             "borrow_date",
             "expected_return_date",
             "actual_return_date",
-            "book_id",
+            "book",
             "book_title",
-            "user_id",
+            "user",
         )
 
 
@@ -35,7 +35,7 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             "borrow_date",
             "expected_return_date",
             "actual_return_date",
-            "book_id",
+            "book",
         )
         read_only_fields = ("borrow_date",)
 
@@ -46,7 +46,7 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             attrs["actual_return_date"],
             serializers.ValidationError,
         )
-        book_id = data["book_id"].id
+        book_id = data["book"].id
         book = Book.objects.get(pk=book_id)
         if book.inventory < 1:
             raise serializers.ValidationError(
@@ -57,7 +57,7 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         with transaction.atomic():
-            book = validated_data["book_id"]
+            book = validated_data["book"]
             book.inventory -= 1
             book.save()
             borrowing = Borrowing.objects.create(**validated_data)
@@ -75,7 +75,7 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
 
 
 class BorrowingDetailSerializer(serializers.ModelSerializer):
-    book = BookSerializer(source="book_id", many=False, read_only=True)
+    book = BookSerializer(many=False, read_only=True)
 
     class Meta:
         model = Borrowing

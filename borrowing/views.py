@@ -24,7 +24,7 @@ class BorrowingViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = BorrowingListSerializer
-    queryset = Borrowing.objects.all().select_related("book_id")
+    queryset = Borrowing.objects.all().select_related("book")
     permission_classes = (IsAuthenticated,)
 
     @extend_schema(
@@ -63,18 +63,18 @@ class BorrowingViewSet(
     def get_queryset(self) -> QuerySet:
         queryset = self.queryset
         is_active = self.request.GET.get("is_active")
-        user = self.request.GET.get("user_id")
+        user = self.request.GET.get("user")
         if self.request.user.is_staff is True:
             if is_active:
                 if user == "":
                     queryset = queryset.exclude(actual_return_date__isnull=False)
                 elif user != "":
-                    queryset = queryset.filter(user_id_id=user).exclude(
+                    queryset = queryset.filter(user_id=int(user)).exclude(
                         actual_return_date__isnull=False
                     )
             return queryset
         if is_active:
-            queryset = queryset.filter(user_id=self.request.user).exclude(
+            queryset = queryset.filter(user=self.request.user).exclude(
                 actual_return_date__isnull=False
             )
             return queryset
@@ -86,17 +86,17 @@ class BorrowingViewSet(
     @extend_schema(
         parameters=[
             OpenApiParameter(
-                name="user_id",
+                name="user",
                 type={"type": "int"},
                 description="Filter for admins. "
                 "Use along with parameter is_active "
-                "(ex ?user_id&is_active will return borrowings of all userrs. "
-                "?user_id=1&is_active will return borrowing of user with id 1)",
+                "(ex ?user&is_active will return borrowings of all users."
+                "?user=1&is_active will return borrowing of user with id 1)",
                 required=False,
             ),
             OpenApiParameter(
                 name="is_active",
-                description="Filter by actual_return_date (ex ?is_active) only for authenticated non admin users",
+                description="Filter by actual_return_date (ex ?is_active=true) only for authenticated non admin users",
                 required=False,
                 allow_blank=True,
             ),
