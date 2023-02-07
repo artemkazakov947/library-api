@@ -68,20 +68,19 @@ class BorrowingViewSet(
             if is_active:
                 if user == "":
                     queryset = queryset.exclude(actual_return_date__isnull=False)
-                elif user != "":
-                    queryset = queryset.filter(user_id=int(user)).exclude(
-                        actual_return_date__isnull=False
-                    )
+                queryset = queryset.filter(user_id=int(user)).exclude(
+                    actual_return_date__isnull=False
+                )
             return queryset
         if is_active:
             queryset = queryset.filter(user=self.request.user).exclude(
                 actual_return_date__isnull=False
             )
             return queryset
-        return queryset.filter(user_id=self.request.user)
+        return queryset.filter(user=self.request.user)
 
     def perform_create(self, serializer) -> None:
-        serializer.save(user_id=self.request.user)
+        serializer.save(user=self.request.user)
 
     @extend_schema(
         parameters=[

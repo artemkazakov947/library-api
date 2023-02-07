@@ -13,16 +13,20 @@
 
 ## Installing / Getting started
 
-You have to install Python 3 and create your own Telegram bot!
-
-
+You have to install Python 3.
+ 
 ```shell
 git clone https://github.com/artemkazakov947/library-api.git
-cd library
-pip install virtualenv venv
+cd library_api
+python -m venv venv
 venv\Scripts\activate
 pip install -r requirementes.txt
 create .env and fill it with necessary env variables
+
+  **Please note**: 
+  -BOT_TOKEN=6081832957:AAH2nu93PXRGmtjEMVNKBel7G2beHF2sKk8(test_bot_library)
+  -СHAT_ID=it is your telegram`s id. You can find it by Get My ID telegram bot.
+
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver 

@@ -50,7 +50,7 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
         book = Book.objects.get(pk=book_id)
         if book.inventory < 1:
             raise serializers.ValidationError(
-                ({"book_id": f"We have not currently {book}"})
+                ({"book": f"We have not currently {book}"})
             )
 
         return data
@@ -66,7 +66,7 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
                 f" Book: id {book.id}. Title:'{book.title}' by {book.author}."
                 f" Borrowing date: {borrowing.borrow_date.strftime('%d/%m/%Y')}."
                 f" Expecting return: {borrowing.expected_return_date.strftime('%d/%m/%Y')}."
-                f" Borrower_id: {borrowing.user_id.id}."
+                f" Borrower_id: {borrowing.user.id}."
             )
             borrowing_telegram_notification(
                 message, os.getenv("CHAT_ID"), os.getenv("BOT_TOKEN")
