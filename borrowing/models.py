@@ -44,8 +44,6 @@ class Borrowing(models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        if not self.borrow_date:
-            self.borrow_date = date.today()
         self.full_clean()
         return super(Borrowing, self).save(
             force_insert, force_update, using, update_fields
