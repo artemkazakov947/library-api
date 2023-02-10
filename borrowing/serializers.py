@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 from book_service.models import Book
 from book_service.serializers import BookSerializer
-from borrowing.models import Borrowing
+from borrowing.models import Borrowing, get_return_date
 from borrowing.telegram_notification import borrowing_telegram_notification
 
 
@@ -40,6 +40,8 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ("borrow_date",)
 
     def validate(self, attrs):
+        if "expected_return_date" not in attrs:
+            attrs["expected_return_date"] = get_return_date()
         data = super(BorrowingCreateSerializer, self).validate(attrs)
         Borrowing.validate_dates(
             attrs["expected_return_date"],

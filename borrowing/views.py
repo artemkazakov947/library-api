@@ -90,7 +90,7 @@ class BorrowingViewSet(
                 description="Filter for admins. "
                 "Use along with parameter is_active "
                 "(ex ?user&is_active will return borrowings of all users."
-                "?user=1&is_active will return borrowing of user with id 1)",
+                "?user=1&is_active=true will return current borrowing of user with id 1)",
                 required=False,
             ),
             OpenApiParameter(
@@ -103,3 +103,10 @@ class BorrowingViewSet(
     )
     def list(self, request, *args, **kwargs):
         return super(BorrowingViewSet, self).list(request, *args, **kwargs)
+
+    @extend_schema(responses={status.HTTP_200_OK: BorrowingCreateSerializer})
+    def create(self, request, *args, **kwargs):
+        """add new borrowing (when borrow book - inventory should be made -= 1)
+        You have to choose book, and expected_return_date, but you may not provide expected_return_date,
+        by default it will be 2 weeks."""
+        return super(BorrowingViewSet, self).create(request, *args, **kwargs)
