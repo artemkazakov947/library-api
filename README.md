@@ -18,7 +18,7 @@
     Users Service:
     Managing authentication & user registration
     API:
-    POST:           users/                   - register a new user 
+    POST:           users/register/                   - register a new user 
     POST:           users/token/             - get JWT tokens 
     POST:           users/token/refresh/     - refresh JWT token 
     GET:            users/me/                - get my profile info 
@@ -66,9 +66,11 @@ create .env and fill it with necessary env variables
   -СHAT_ID=it is your telegram`s id. You can find it by Get My ID telegram bot.(https://t.me/getmyid_bot)
 
 python manage.py migrate
-python manage.py createsuperuser
 python manage.py runserver 
 ```
+### Admin credentials:
+    e-mail: admin@example.com
+    password: test_admin12345
 
 ### Features
     - Permissions implemented
