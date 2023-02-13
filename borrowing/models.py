@@ -21,9 +21,7 @@ class Borrowing(models.Model):
     )
 
     @staticmethod
-    def validate_dates(
-            expected_return: date, actual_return: date, error
-    ) -> None:
+    def validate_dates(expected_return: date, actual_return: date, error) -> None:
         if expected_return < date.today():
             raise error({"expected_return_date": "Invalid date - renewal in past!"})
         if get_return_date() < expected_return:
@@ -32,9 +30,8 @@ class Borrowing(models.Model):
                     "expected_return_date": "Enter a date between now and 2 weeks (default 2)."
                 }
             )
-        if actual_return:
-            if actual_return < date.today():
-                raise error({"actual_return_date": "Invalid date - renewal in past!"})
+        if actual_return and actual_return < date.today():
+            raise error({"actual_return_date": "Invalid date - renewal in past!"})
 
     def clean(self) -> None:
         Borrowing.validate_dates(
