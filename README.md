@@ -9,32 +9,32 @@
     Books Service:
     Managing books amount (CRUD for Books)
     API:
-    POST:                books/              - add new (only admin) 
-    GET:                 books/              - get a list of books
-    GET:                 books/<id>/         - get book's detail info (admin and authenticated)
-    PUT/PATCH:           books/<id>/         - update book (also manage inventory, only admin) 
-    DELETE:              books/<id>/         - delete book (only admin)
+    POST:                api/books/              - add new (only admin) 
+    GET:                 api/books/              - get a list of books
+    GET:                 api/books/<id>/         - get book's detail info (admin and authenticated)
+    PUT/PATCH:           api/books/<id>/         - update book (also manage inventory, only admin) 
+    DELETE:              api/books/<id>/         - delete book (only admin)
     
     Users Service:
     Managing authentication & user registration
     API:
-    POST:           users/register/                   - register a new user 
-    POST:           users/token/             - get JWT tokens 
-    POST:           users/token/refresh/     - refresh JWT token 
-    GET:            users/me/                - get my profile info 
-    PUT/PATCH:      users/me/                - update profile info 
+    POST:           api/users/register/                   - register a new user 
+    POST:           api/users/token/             - get JWT tokens 
+    POST:           api/users/token/refresh/     - refresh JWT token 
+    GET:            api/users/me/                - get my profile info 
+    PUT/PATCH:      api/users/me/                - update profile info 
     
     Borrowings Service (FOR Authenticated):
     Managing users' borrowings of books
     API:
-    GET:              borrowings/                             - list of borrowings (for all users if user=admin and list of your borrowings if you are not admin)
-    POST:             borrowings/   		                  - add new borrowing (when borrow book - inventory should be made -= 1
+    GET:              api/borrowings/                             - list of borrowings (for all users if user=admin and list of your borrowings if you are not admin)
+    POST:             api/borrowings/   		                  - add new borrowing (when borrow book - inventory should be made -= 1
                                                                 you have to choose book, and expected_return_date, but you may not provide expected_return_date,
                                                                 by default it will be 2 weeks.)
-    GET:              borrowings/?user=...&is_active=true     - get borrowings by user id and whether is borrowing still active or not. For non admin users, you can
+    GET:              api/borrowings/?user=...&is_active=true     - get borrowings by user id and whether is borrowing still active or not. For non admin users, you can
                                                                 use only ?is_active=true
-    GET:              borrowings/<id>/  			          - get specific borrowing 
-    POST: 	          borrowings/<id>/return/ 		          - set actual return date (inventory should be made += 1)
+    GET:              api/borrowings/<id>/  			          - get specific borrowing 
+    POST: 	          api/borrowings/<id>/return/ 		          - set actual return date (inventory should be made += 1)
     
     Notifications Service (Telegram):
     Notifications about new borrowing created.
