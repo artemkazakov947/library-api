@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
-
 from rest_framework.test import APIClient
 
 from book_service.models import Book
@@ -97,9 +96,7 @@ class AuthenticatedBookTest(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_book_patch_forbidden(self):
-        payload = {
-            "title": "New title"
-        }
+        payload = {"title": "New title"}
 
         book = Book.objects.get(id=1)
         url = book_detail_page(book.id)
@@ -113,9 +110,7 @@ class AdminBookTest(TestCase):
         self.client = APIClient()
 
         self.admin = get_user_model().objects.create_superuser(
-            email="admin@admin.com",
-            password="user12345",
-            is_staff=True
+            email="admin@admin.com", password="user12345", is_staff=True
         )
         self.client.force_authenticate(self.admin)
 
@@ -135,9 +130,7 @@ class AdminBookTest(TestCase):
 
     def test_patch_book_allowed(self):
         book_sample()
-        payload = {
-            "title": "New Title"
-        }
+        payload = {"title": "New Title"}
         book = Book.objects.get(id=1)
         url = book_detail_page(book.id)
 

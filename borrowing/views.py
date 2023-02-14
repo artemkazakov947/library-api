@@ -8,7 +8,6 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-
 from borrowing.models import Borrowing
 from borrowing.serializers import (
     BorrowingListSerializer,
@@ -42,7 +41,7 @@ class BorrowingViewSet(
         if borrowing.actual_return_date is not None:
             raise ValidationError("This borrowing has been already returned!")
         borrowing.actual_return_date = date.today()
-        book = borrowing.book_id
+        book = borrowing.book
         book.inventory += 1
         book.save()
         borrowing.save()
