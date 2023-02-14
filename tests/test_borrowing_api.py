@@ -1,5 +1,3 @@
-from datetime import date, timedelta
-
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -7,8 +5,8 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from book_service.models import Book
-from tests.test_book_api import book_sample
 from borrowing.models import Borrowing
+from tests.test_book_api import book_sample
 
 BORROWING_URL = reverse("borrowing:borrowing-list")
 
@@ -25,13 +23,12 @@ class BorrowingTest(TestCase):
         book = book_sample()
         initial_inventory = book.inventory
         payload = {
-            "expected_return_date": f"{date.today() + timedelta(days=14)}",
+            "book": book.id,
             "actual_return_date": "",
-            "book_id": book.id,
         }
 
         resp_create_borrowing = self.client.post(BORROWING_URL, payload)
-        borrowing = Borrowing.objects.get(pk=1)
+        borrowing = Borrowing.objects.get(id=1)
 
         self.assertEqual(resp_create_borrowing.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Book.objects.get(pk=book.id).inventory, initial_inventory - 1)
