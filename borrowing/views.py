@@ -52,12 +52,13 @@ class BorrowingViewSet(
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_serializer_class(self):
-        if self.action == "list":
-            return BorrowingListSerializer
-        if self.action == "create":
-            return BorrowingCreateSerializer
-        if self.action in ["retrieve", "return"]:
-            return BorrowingDetailSerializer
+        serializer_classes = {
+            "list": BorrowingListSerializer,
+            "create": BorrowingCreateSerializer,
+            "retrieve": BorrowingDetailSerializer,
+            "return": BorrowingDetailSerializer,
+        }
+        return serializer_classes[self.action]
 
     def get_queryset(self) -> QuerySet:
         queryset = self.queryset
