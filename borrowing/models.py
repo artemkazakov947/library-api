@@ -1,3 +1,4 @@
+import datetime
 from datetime import timedelta, date
 
 from django.conf import settings
@@ -7,7 +8,7 @@ from django.db import models
 from book_service.models import Book
 
 
-def get_return_date():
+def get_return_date() -> date:
     return date.today() + timedelta(days=14)
 
 
