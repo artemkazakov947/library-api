@@ -77,6 +77,7 @@ python manage.py runserver
     - CRUD for books
     - Borrowing and return mechanism with books amount accounting
     - Notification for admin about new borrowing via Telegram bot
+    - Daily notification for admin about overdue borrowings
 
     
     
