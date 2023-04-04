@@ -153,3 +153,9 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
+
+SERIALIZATION_MODULES = {
+    "json": "django.core.serializers.json",
+    "xml": "django.core.serializers.xml_serializer",
+    "yaml": "django.core.serializers.pyyaml",
+}

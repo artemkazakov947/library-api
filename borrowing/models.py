@@ -1,4 +1,3 @@
-import datetime
 from datetime import timedelta, date
 
 from django.conf import settings
@@ -49,3 +48,4 @@ class Borrowing(models.Model):
 
     def __str__(self) -> str:
         return f"{self.book.title} borrowed by {self.user}"
+
