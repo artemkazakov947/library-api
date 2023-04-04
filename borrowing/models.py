@@ -48,4 +48,3 @@ class Borrowing(models.Model):
 
     def __str__(self) -> str:
         return f"{self.book.title} borrowed by {self.user}"
-
