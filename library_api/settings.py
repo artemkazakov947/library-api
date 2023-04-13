@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "book_service",
     "user",
     "borrowing",
+    "payment",
     "django_celery_beat",
 ]
 
