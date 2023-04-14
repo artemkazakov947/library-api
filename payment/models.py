@@ -1,4 +1,5 @@
 from django.db import models
+from djmoney.money import Money
 from enumchoicefield import ChoiceEnum, EnumChoiceField
 
 from borrowing.models import Borrowing
@@ -23,4 +24,6 @@ class Payment(models.Model):
 
     @property
     def money_to_pay(self):
-        return (self.borrowing.actual_return_date - self.borrowing.borrow_date) * self.borrowing.book.daily_fee
+        if self.borrowing.actual_return_date:
+            delta = self.borrowing.actual_return_date - self.borrowing.borrow_date
+            return delta.days * self.borrowing.book.daily_fee
