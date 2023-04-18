@@ -146,6 +146,8 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+
 SIMPLE_JWT = {
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZE",
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=45),
