@@ -18,8 +18,8 @@ class Payment(models.Model):
     status = EnumChoiceField(StatusEnum)
     type = EnumChoiceField(TypeEnum)
     borrowing = models.OneToOneField(Borrowing, on_delete=models.CASCADE, related_name="payment")
-    session_url = models.URLField(max_length=255)
-    session_id = models.TextField()
+    session_url = models.URLField(max_length=255, default="https://www.default.com/")
+    session_id = models.TextField(default="default")
 
     @property
     def money_to_pay(self):
