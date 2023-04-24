@@ -70,14 +70,15 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             book.inventory -= 1
             book.save()
             borrowing = Borrowing.objects.create(**validated_data)
-            session = stripe_session(borrowing)
-            Payment.objects.create(
+            payment = Payment.objects.create(
                 status=StatusEnum.PENDING,
                 type=TypeEnum.PAYMENT,
-                borrowing=borrowing,
-                session_url=session.url,
-                session_id=session.id,
+                borrowing=borrowing
             )
+            session = stripe_session(borrowing, payment.id)
+            payment.session_id = session.id
+            payment.session_url = session.url
+            payment.save()
             message = (
                 f"New borrowing! "
                 f" Book: id {book.id}. Title:'{book.title}' by {book.author}."
