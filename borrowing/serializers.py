@@ -1,12 +1,19 @@
 import os
 
+import stripe
 from django.db import transaction
 from rest_framework import serializers
 
+import library_api.settings
 from book_service.models import Book
 from book_service.serializers import BookSerializer
 from borrowing.models import Borrowing, get_return_date
+from borrowing.stripe_helper import stripe_session
 from borrowing.telegram_notification import borrowing_telegram_notification
+from payment.models import Payment, TypeEnum, StatusEnum
+
+
+stripe.api_key = library_api.settings.STRIPE_SECRET_KEY
 
 
 class BorrowingListSerializer(serializers.ModelSerializer):
@@ -63,6 +70,15 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             book.inventory -= 1
             book.save()
             borrowing = Borrowing.objects.create(**validated_data)
+            payment = Payment.objects.create(
+                status=StatusEnum.PENDING,
+                type=TypeEnum.PAYMENT,
+                borrowing=borrowing
+            )
+            session = stripe_session(borrowing, payment.id)
+            payment.session_id = session.id
+            payment.session_url = session.url
+            payment.save()
             message = (
                 f"New borrowing! "
                 f" Book: id {book.id}. Title:'{book.title}' by {book.author}."
@@ -73,6 +89,7 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             borrowing_telegram_notification(
                 message, os.getenv("CHAT_ID"), os.getenv("BOT_TOKEN")
             )
+
         return borrowing
 
 

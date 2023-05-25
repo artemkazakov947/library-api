@@ -23,7 +23,7 @@ class BorrowingViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = BorrowingListSerializer
-    queryset = Borrowing.objects.all().select_related("book")
+    queryset = Borrowing.objects.select_related("book").select_related("user")
     permission_classes = (IsAuthenticated,)
 
     @extend_schema(
